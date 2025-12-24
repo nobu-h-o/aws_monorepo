@@ -1,0 +1,104 @@
+name: Validate Branch Name
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  validate-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name format
+        id: validate
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+
+          # System branches that are excluded from validation
+          EXCLUDED_BRANCHES="^(main|master|develop|staging|production)$"
+
+          if [[ "$BRANCH_NAME" =~ $EXCLUDED_BRANCHES ]]; then
+            echo "valid=true" >> $GITHUB_OUTPUT
+            echo "System branch detected: $BRANCH_NAME - skipping validation"
+            exit 0
+          fi
+
+          # Pattern for conventional commit branch names: type/description
+          PATTERN="^(feat|fix|docs|chore|refactor|test|style|perf|ci|build|revert)(/[a-z0-9\-]+)+$"
+
+          if [[ "$BRANCH_NAME" =~ $PATTERN ]]; then
+            echo "valid=true" >> $GITHUB_OUTPUT
+            echo "✓ Branch name is valid: $BRANCH_NAME"
+          else
+            echo "valid=false" >> $GITHUB_OUTPUT
+            echo "✗ Invalid branch name: $BRANCH_NAME"
+            echo ""
+            echo "Expected format: type/description"
+            echo "Examples: feat/user-auth, fix/login-bug, docs/readme-update"
+            echo ""
+            echo "Valid types: feat, fix, docs, chore, refactor, test, style, perf, ci, build, revert"
+            echo "Description: Use kebab-case (lowercase, hyphens only)"
+          fi
+
+      - name: Comment on PR with guidelines
+        if: steps.validate.outputs.valid == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = '${{ github.head_ref }}';
+            const body = `## ❌ Branch Name Validation Failed
+
+            Your branch name \`${branchName}\` does not follow the required naming convention.
+
+            ### Required Format
+            \`\`\`
+            type/description
+            \`\`\`
+
+            ### Valid Types
+            - \`feat\` - New features
+            - \`fix\` - Bug fixes
+            - \`docs\` - Documentation changes
+            - \`chore\` - Maintenance tasks
+            - \`refactor\` - Code refactoring
+            - \`test\` - Test additions/modifications
+            - \`style\` - Code style/formatting
+            - \`perf\` - Performance improvements
+            - \`ci\` - CI/CD configuration
+            - \`build\` - Build system changes
+            - \`revert\` - Reverting changes
+
+            ### Rules for Description
+            - Use **kebab-case** (lowercase words with hyphens)
+            - Only lowercase letters, numbers, and hyphens
+            - No spaces, underscores, or uppercase letters
+
+            ### Examples
+            ✓ \`feat/user-authentication\`
+            ✓ \`fix/login-redirect-bug\`
+            ✓ \`docs/api-documentation\`
+            ✗ \`feature/user-auth\` (wrong type)
+            ✗ \`feat/User_Auth\` (not kebab-case)
+            ✗ \`add-feature\` (missing type)
+
+            ### How to Fix
+            Rename your branch:
+            \`\`\`bash
+            git branch -m ${branchName} type/your-description
+            git push origin --delete ${branchName}
+            git push -u origin type/your-description
+            \`\`\`
+
+            See the [Branch Naming Guide](.github/BRANCH_NAMING.md) for more details.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Fail if branch name is invalid
+        if: steps.validate.outputs.valid == 'false'
+        run: |
+          echo "Branch name validation failed. Please rename your branch to follow the convention."
+          exit 1
