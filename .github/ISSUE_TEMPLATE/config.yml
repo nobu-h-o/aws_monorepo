@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question or Discussion
+    url: https://github.com/nobu-h-o/aws_monorepo/discussions
+    about: For questions or general discussions, please use GitHub Discussions
+  - name: Commit Convention Guide
+    url: https://github.com/nobu-h-o/aws_monorepo/blob/main/.github/COMMIT_CONVENTION.md
+    about: Learn about our commit message conventions and PR title requirements

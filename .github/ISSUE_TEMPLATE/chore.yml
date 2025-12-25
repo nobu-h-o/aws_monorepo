@@ -1,0 +1,87 @@
+name: Maintenance/Chore
+description: Maintenance tasks, dependency updates, or other chores (will result in a chore: commit)
+title: "[Chore]: "
+labels: ["chore", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping maintain the project! This issue will typically result in a `chore:` commit.
+
+  - type: dropdown
+    id: chore-type
+    attributes:
+      label: Chore Type
+      description: What type of maintenance task is this?
+      options:
+        - Dependency update
+        - Build configuration
+        - Development tooling
+        - Repository cleanup
+        - License/Legal
+        - Release preparation
+        - Other maintenance
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Task Description
+      description: Describe the maintenance task or chore
+      placeholder: We need to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this maintenance task needed?
+      placeholder: This is needed because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Task List
+      description: If applicable, list the specific tasks to be done
+      placeholder: |
+        - [ ] Update dependency X to version Y
+        - [ ] Update configuration files
+        - [ ] Update documentation
+    validations:
+      required: false
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: What is the impact of this maintenance task?
+      placeholder: |
+        - Breaking changes: Yes/No
+        - Dependencies affected: ...
+        - Build process affected: Yes/No
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the maintenance task.
+      placeholder: Any additional information...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have provided all the required information above
+          required: true

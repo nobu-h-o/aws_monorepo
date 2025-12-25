@@ -1,0 +1,96 @@
+name: Refactoring Proposal
+description: Suggest code refactoring or technical improvements (will result in a refactor: commit)
+title: "[Refactor]: "
+labels: ["refactor", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a refactoring improvement! This issue will typically result in a `refactor:` commit.
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: Describe the current code/structure that needs refactoring
+      placeholder: Currently, the code...
+    validations:
+      required: true
+
+  - type: textarea
+    id: issues
+    attributes:
+      label: Issues with Current Implementation
+      description: What problems or concerns exist with the current implementation?
+      placeholder: |
+        - Code duplication
+        - Complex logic
+        - Hard to test
+        - Poor maintainability
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed Refactoring
+      description: Describe how you would like to refactor the code
+      placeholder: The code should be restructured to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits
+      description: What benefits will this refactoring provide?
+      placeholder: |
+        - Improved readability
+        - Better testability
+        - Reduced complexity
+    validations:
+      required: false
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Location
+      description: Where is the code that needs refactoring? (file paths, modules, etc.)
+      placeholder: File paths or modules...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Refactoring Scope
+      description: What is the scope of this refactoring?
+      options:
+        - Single function/method
+        - Single file/module
+        - Multiple files
+        - Architecture/system-wide
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, code examples, or diagrams about the refactoring proposal.
+      placeholder: Any additional information...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: This refactoring maintains existing functionality (no feature changes or bug fixes)
+          required: true
+        - label: I have provided all the required information above
+          required: true
